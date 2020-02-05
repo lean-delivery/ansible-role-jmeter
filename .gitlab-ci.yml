@@ -1,0 +1,54 @@
+---
+# Run all tests
+default:
+  image:
+    name: leandelivery/docker-ansible-ci:ansible-2.9
+
+stages:
+  - lint
+  - deployment test
+
+before_script:
+  - rm -rf molecule/resources/provisioning
+  - ansible --version
+  - ansible-lint --version
+  - molecule --version
+  - git clone https://github.com/lean-delivery/ansible-molecule-drivers.git molecule/resources/provisioning
+
+variables:
+  GET_SOURCES_ATTEMPTS: "5"
+
+Lint:
+  stage: lint
+  before_script:
+    - git clone https://github.com/lean-delivery/ansible-lint-rules.git ~/ansible-lint-rules
+  script:
+    - yamllint . -c .yamllint
+    - ansible-lint . -c .ansible-lint
+  after_script:
+    - rm -rf ~/ansible-lint-rules
+  tags:
+    - lint
+
+Docker jmeter:
+  stage: deployment test
+  script:
+    - molecule test -s default
+  tags:
+    - aws
+
+.AWS jmeter:
+  variables:
+    AWS_REGION: us-east-1
+  stage: deployment test
+  script:
+    - molecule test -s cloud-aws-direct
+  tags:
+    - aws
+
+.AZURE jmeter:
+  stage: deployment test
+  script:
+    - molecule test -s cloud-azure-direct
+  tags:
+    - azure
