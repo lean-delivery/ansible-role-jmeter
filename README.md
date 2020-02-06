@@ -5,8 +5,8 @@
 [![Build Status](https://travis-ci.org/lean-delivery/ansible-role-jmeter.svg?branch=master)](https://travis-ci.org/lean-delivery/ansible-role-jmeter)
 [![Build Status](https://gitlab.com/lean-delivery/ansible-role-jmeter/badges/master/pipeline.svg)](https://gitlab.com/lean-delivery/ansible-role-jmeter/pipelines)
 [![Galaxy](https://img.shields.io/badge/galaxy-lean__delivery.jmeter-blue.svg)](https://galaxy.ansible.com/lean_delivery/jmeter)
-![Ansible](https://img.shields.io/ansible/role/d/role_id.svg)
-![Ansible](https://img.shields.io/badge/dynamic/json.svg?label=min_ansible_version&url=https%3A%2F%2Fgalaxy.ansible.com%2Fapi%2Fv1%2Froles%2Frole_id%2F&query=$.min_ansible_version)
+![Ansible](https://img.shields.io/ansible/role/d/46312.svg)
+![Ansible](https://img.shields.io/badge/dynamic/json.svg?label=min_ansible_version&url=https%3A%2F%2Fgalaxy.ansible.com%2Fapi%2Fv1%2Froles%2F46312%2F&query=$.min_ansible_version)
 
 # Table Of Contents
 
