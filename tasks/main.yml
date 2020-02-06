@@ -95,6 +95,8 @@
         repository_url: https://repo.maven.apache.org/maven2
         dest: '{{ jmeter_tmp_folder }}/{{ jm_lib_item.id }}.jar'
         validate_certs: false
+      register: installed_lib
+      until: installed_lib is succeeded
       loop:
         - id: jmeter-plugins-manager
           ver: '{{ jmeter_plugins_manager_version }}'
