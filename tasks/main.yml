@@ -75,6 +75,7 @@
         name: epel
         description: EPEL YUM repo
         baseurl: https://download.fedoraproject.org/pub/epel/$releasever/$basearch/
+        gpgcheck: false
       register: install_repo
       until: install_repo is succeeded
       when: ansible_os_family == 'RedHat'
