@@ -1,0 +1,159 @@
+---
+- block:
+    - name: Fetch archive binaries page
+      uri:
+        url: '{{ jmeter_binaries_url }}'
+        return_content: true
+      register: jm_archive_page
+
+    - name: Find last release version
+      set_fact:
+        jmeter_version: >-
+          {{ jm_archive_page.content
+              | regex_findall('Apache JMeter ([\.\d]+) requires Java')
+              | first }}
+  when: jmeter_version is not defined
+
+- name: Download apache-jmeter-{{ jmeter_version }}.tgz
+  get_url:
+    url: '{{ jmeter_binaries_url }}/{{ jmeter_package }}'
+    dest: '{{ jmeter_tmp_folder }}/{{ jmeter_package }}'
+    checksum: 'sha512:{{ jmeter_checksum }}'
+  register: jmeter_artifact
+
+- block:
+    - name: Make dirs for jmeter
+      file:
+        path: '{{ jm_path_item }}/'
+        state: directory
+        owner: root
+        group: root
+        mode: 0755
+      loop:
+        - '{{ jmeter_path }}'
+        - '{{ jmeter_report_path }}'
+      loop_control:
+        loop_var: jm_path_item
+
+    - name: Install apache-jmeter-{{ jmeter_version }}
+      unarchive:
+        src: '{{ jmeter_artifact.dest }}'
+        dest: '{{ jmeter_path }}/'
+        remote_src: true
+        owner: root
+        group: root
+        mode: 0755
+        extra_opts: [--strip-components=1]
+        creates: '{{ jmeter_path }}/bin/'
+
+    - name: Set configuration properties
+      ini_file:
+        path: '{{ jmeter_path }}/bin/{{ jm_config_item.0.name }}.properties'
+        section: null
+        option: '{{ jm_config_item.1.key }}'
+        value: '{{ jm_config_item.1.value }}'
+        no_extra_spaces: true
+        backup: true
+      loop: >-
+        {{ lookup('subelements', jmeter_config_properties, 'properties', {'skip_missing': True}) }}
+      loop_control:
+        loop_var: jm_config_item
+
+    - name: Put jmeter profile
+      template:
+        src: jmeter.sh.j2
+        dest: /etc/profile.d/jmeter.sh
+        owner: root
+        group: root
+        mode: 0555
+
+    - name: Update jmeter alternatives
+      alternatives:
+        name: jmeter
+        path: '{{ jmeter_path }}/bin/jmeter'
+        link: '/usr/bin/jmeter'
+        priority: 100
+  become: true
+
+- name: Set jmeter plugins
+  block:
+    - name: Add epel repository
+      yum_repository:
+        name: epel
+        description: EPEL YUM repo
+        baseurl: https://download.fedoraproject.org/pub/epel/7/$basearch/
+        gpgcheck: false
+      register: install_repo
+      until: install_repo is succeeded
+      when: ansible_os_family == 'RedHat'
+
+    - name: Install pip
+      package:
+        name: '{{ python_pip_package }}'
+      register: installed_packages
+      until: installed_packages is succeeded
+
+    - name: Install lxml
+      pip:
+        name:
+          - lxml
+          - pip
+        state: present
+        extra_args: --upgrade
+        executable: 'pip{{ ansible_facts.python.version.major }}'
+      register: installed_packages
+      until: installed_packages is succeeded
+
+    - name: Download jmeter-plugins-manager & cmdrunner
+      maven_artifact:
+        version: '{{ jm_lib_item.ver }}'
+        artifact_id: '{{ jm_lib_item.id }}'
+        group_id: kg.apc
+        repository_url: https://repo.maven.apache.org/maven2
+        dest: '{{ jmeter_tmp_folder }}/{{ jm_lib_item.id }}.jar'
+        validate_certs: false
+      register: installed_lib
+      until: installed_lib is succeeded
+      loop:
+        - id: jmeter-plugins-manager
+          ver: '{{ jmeter_plugins_manager_version }}'
+        - id: cmdrunner
+          ver: '{{ jmeter_cmdrunner_version }}'
+      loop_control:
+        loop_var: jm_lib_item
+
+    - name: Install plugins-manager & cmdrunner
+      copy:
+        src: '{{ jmeter_tmp_folder }}/{{ jm_lib_item.id }}.jar'
+        dest: '{{ jm_lib_item.dst }}/{{ jm_lib_item.id }}.jar'
+        owner: root
+        group: root
+        mode: 0644
+        remote_src: true
+      loop:
+        - id: jmeter-plugins-manager
+          dst: '{{ jmeter_path }}/lib/ext'
+        - id: cmdrunner
+          dst: '{{ jmeter_path }}/lib'
+      loop_control:
+        loop_var: jm_lib_item
+
+    - name: Create plugins manager cmd script
+      template:
+        src: PluginManagerCMD.sh.j2
+        dest: '{{ jmeter_path }}/bin/PluginManagerCMD.sh'
+        owner: root
+        group: root
+        mode: 0755
+
+    - name: Setup plugins
+      command: >-
+        {{ jmeter_path }}/bin/PluginManagerCMD.sh
+        {{ jmeter_plugins_manager_action }}
+        {{ jmeter_plugins | join(',') }}
+      register: pmanager_run
+      when: jmeter_plugins|length
+      changed_when: >-
+        not "Finishing without changes" in pmanager_run.stdout
+  when: jmeter_plugins_install | bool
+  become: true

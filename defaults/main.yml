@@ -1,0 +1,25 @@
+---
+# defaults file for jmeter
+jmeter_binaries_url: https://archive.apache.org/dist/jmeter/binaries
+jmeter_checksum_url: 'https://archive.apache.org/dist/jmeter/binaries/{{ jmeter_package }}.sha512'
+jmeter_checksum: >-
+  {{ lookup('url', jmeter_checksum_url).split()[0] }}
+jmeter_tmp_folder: /tmp
+jmeter_package: 'apache-jmeter-{{ jmeter_version }}.tgz'
+jmeter_root_path: /opt
+jmeter_report_path: '{{ jmeter_root_path }}/reports'
+jmeter_path: '{{ jmeter_root_path }}/apache-jmeter-{{ jmeter_version }}'
+jmeter_cmdrunner_version: latest
+jmeter_plugins_install: false
+jmeter_plugins_manager_version: latest
+jmeter_plugins_manager_action: install
+jmeter_plugins: []
+
+
+jmeter_config_properties:
+  - name: upgrade
+  - name: system
+  - name: jmeter
+  - name: reportgenerator
+  - name: saveservice
+  - name: user
