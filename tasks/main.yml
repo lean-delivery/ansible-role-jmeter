@@ -20,6 +20,7 @@
     dest: '{{ jmeter_tmp_folder }}/{{ jmeter_package }}'
     checksum: 'sha512:{{ jmeter_checksum }}'
   register: jmeter_artifact
+  until: jmeter_artifact is succeeded
 
 - block:
     - name: Make dirs for jmeter
