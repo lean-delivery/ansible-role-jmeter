@@ -4,6 +4,15 @@
 - name: Verify
   hosts: all
   tasks:
-  - name: Example assertion
-    assert:
-      that: true
+    - name: Check jmeter
+      command: jmeter --version
+      register: jmeter_ver_cmd
+      become: true
+
+    - name: Debug jmeter_ver_cmd
+      debug:
+        var: jmeter_ver_cmd
+
+    - name: Assert that java ver is present
+      assert:
+        that: "'The Apache Software Foundation' in jmeter_ver_cmd.stdout"
