@@ -1,17 +1,17 @@
 ---
 # This is an example playbook to execute Ansible tests.
 
-- name: Verify
+- name: Verify jmeter
   hosts: all
   tasks:
-    - name: Check jmeter
+    - name: Check jmeter version
       command: jmeter --version
       register: jmeter_ver_cmd
       become: true
 
     - name: Debug jmeter_ver_cmd
       debug:
-        var: jmeter_ver_cmd
+        var: jmeter_ver_cmd.stdout
 
     - name: Assert that java ver is present
       assert:
