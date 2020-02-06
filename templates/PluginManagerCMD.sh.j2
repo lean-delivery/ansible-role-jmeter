@@ -1,0 +1,3 @@
+#!/bin/sh
+
+java -Djava.awt.headless=true $JVM_ARGS -jar '{{ jmeter_path }}/lib/cmdrunner.jar' --tool org.jmeterplugins.repository.PluginManagerCMD "$@"

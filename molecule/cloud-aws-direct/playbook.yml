@@ -2,4 +2,9 @@
 - name: Converge
   hosts: all
   roles:
+    - role: lean_delivery.java
+      java_distribution: openjdk
+      java_major_version: 8
+      transport: repositories
+      java_tarball_install: false
     - role: ansible-role-jmeter

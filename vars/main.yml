@@ -1,2 +1,4 @@
 ---
-# vars file for jmeter
+python_pip_package: >-
+  {{ (ansible_facts.python.version.major|int == 3)
+      | ternary('python3-pip', 'python-pip') }}
