@@ -66,6 +66,13 @@
         owner: root
         group: root
         mode: 0555
+
+    - name: Update alternatives
+      alternatives:
+        name: jmeter
+        path: '{{ jmeter_path }}/bin/jmeter'
+        link: '/usr/bin/jmeter'
+        priority: 100
   become: true
 
 - name: Set jmeter plugins
