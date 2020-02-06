@@ -138,5 +138,5 @@
       when: jmeter_plugins|length
       changed_when: >-
         not "Finishing without changes" in pmanager_run.stdout
-  when: jmeter_plugins_manager_install | bool
+  when: jmeter_plugins_install | bool
   become: true

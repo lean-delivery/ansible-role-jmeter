@@ -8,3 +8,9 @@
       transport: repositories
       java_tarball_install: false
     - role: ansible-role-jmeter
+      jmeter_plugins_install: true
+      jmeter_plugins:
+        - jpgc-casutg
+        - jpgc-tst
+        - jpgc-functions
+        - jpgc-dummy
