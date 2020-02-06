@@ -74,7 +74,7 @@
       yum_repository:
         name: epel
         description: EPEL YUM repo
-        baseurl: https://download.fedoraproject.org/pub/epel/$releasever/$basearch/
+        baseurl: https://download.fedoraproject.org/pub/epel/7/$basearch/
         gpgcheck: false
       register: install_repo
       until: install_repo is succeeded
