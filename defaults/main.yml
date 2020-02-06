@@ -9,7 +9,6 @@ jmeter_package: 'apache-jmeter-{{ jmeter_version }}.tgz'
 jmeter_root_path: /opt
 jmeter_report_path: '{{ jmeter_root_path }}/reports'
 jmeter_path: '{{ jmeter_root_path }}/apache-jmeter-{{ jmeter_version }}'
-jmeter_cmdrunner_repo: http://search.maven.org/remotecontent?filepath=kg/apc/cmdrunner
 jmeter_cmdrunner_version: latest
 jmeter_plugins_install: false
 jmeter_plugins_manager_version: latest
