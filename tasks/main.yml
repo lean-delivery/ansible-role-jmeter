@@ -67,7 +67,7 @@
         group: root
         mode: 0555
 
-    - name: Update alternatives
+    - name: Update jmeter alternatives
       alternatives:
         name: jmeter
         path: '{{ jmeter_path }}/bin/jmeter'
@@ -77,7 +77,7 @@
 
 - name: Set jmeter plugins
   block:
-    - name: Add repository
+    - name: Add epel repository
       yum_repository:
         name: epel
         description: EPEL YUM repo
