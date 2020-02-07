@@ -1,13 +1,13 @@
 ---
 - name: Include variables
-  include_vars: '{{ distribution }}'
+  include_vars: '{{ os_distribution_type }}'
   with_first_found:
     - files:
         - '{{ ansible_distribution }}.yml'
         - '{{ ansible_os_family }}.yml'
       skip: true
   loop_control:
-    loop_var: distribution
+    loop_var: os_distribution_type
 
 - block:
     - name: Fetch archive binaries page
