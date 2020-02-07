@@ -36,7 +36,7 @@
     - name: Install archivers
       package:
         name:
-          - gtar
+          - tar
           - unzip
       register: install_packages
       until: install_packages is succeeded
