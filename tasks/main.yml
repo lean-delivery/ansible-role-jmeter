@@ -33,14 +33,6 @@
   until: jmeter_artifact is succeeded
 
 - block:
-    # - name: Install archivers
-    #   package:
-    #     name:
-    #       - tar
-    #       - unzip
-    #   register: install_packages
-    #   until: install_packages is succeeded
-
     - name: Make dirs for jmeter
       file:
         path: '{{ jm_path_item }}/'

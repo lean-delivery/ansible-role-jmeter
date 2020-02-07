@@ -33,8 +33,12 @@
    - Debian
      - stretch
    - Amazon Linux 2
-   - EL
+   - Red Hat
      - 7
+     - 8
+   - CentOS
+     - 7
+     - 8
 
 **Minimal Ansible version**:
 
