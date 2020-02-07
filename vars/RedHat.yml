@@ -1,2 +1,2 @@
 ---
-jmeter_epel_url: https://download.fedoraproject.org/pub/epel/$releasever/$basearch/
+jmeter_epel_url: 'https://download.fedoraproject.org/pub/epel/{{ ansible_distribution_version }}/$basearch/'
