@@ -106,11 +106,9 @@
 - name: Set jmeter plugins
   block:
     - name: Add epel repository
-      yum_repository:
-        name: epel
-        description: EPEL YUM repo
-        baseurl: '{{ jmeter_epel_url }}'
-        gpgcheck: false
+      yum:
+        name: '{{ jmeter_epel_url }}'
+        state: present
       register: install_repo
       until: install_repo is succeeded
       when: ansible_os_family == 'RedHat'
