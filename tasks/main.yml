@@ -65,9 +65,9 @@
         backup: true
       loop: >-
         {{ query( 'subelements', jmeter_config_properties,
-                  'properties', 
+                  'properties',
                   {'skip_missing': true}
-                ) 
+                )
         }}
       loop_control:
         loop_var: jm_config_item
