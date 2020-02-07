@@ -1,4 +1,14 @@
 ---
+- name: Include variables
+  include_vars: '{{ os_distribution_type }}'
+  with_first_found:
+    - files:
+        - '{{ ansible_distribution }}.yml'
+        - '{{ ansible_os_family }}.yml'
+      skip: true
+  loop_control:
+    loop_var: os_distribution_type
+
 - block:
     - name: Fetch archive binaries page
       uri:
@@ -56,7 +66,11 @@
         no_extra_spaces: true
         backup: true
       loop: >-
-        {{ lookup('subelements', jmeter_config_properties, 'properties', {'skip_missing': True}) }}
+        {{ query( 'subelements', jmeter_config_properties,
+                  'properties',
+                  {'skip_missing': true}
+                )
+        }}
       loop_control:
         loop_var: jm_config_item
 
@@ -70,20 +84,23 @@
 
     - name: Update jmeter alternatives
       alternatives:
-        name: jmeter
-        path: '{{ jmeter_path }}/bin/jmeter'
-        link: '/usr/bin/jmeter'
+        name: '{{ jm_item }}'
+        path: '{{ jmeter_path }}/bin/{{ jm_item }}'
+        link: '/usr/bin/{{ jm_item }}'
         priority: 100
+      loop:
+        - jmeter
+        - jmeter-server
+      loop_control:
+        loop_var: jm_item
   become: true
 
 - name: Set jmeter plugins
   block:
     - name: Add epel repository
-      yum_repository:
-        name: epel
-        description: EPEL YUM repo
-        baseurl: https://download.fedoraproject.org/pub/epel/7/$basearch/
-        gpgcheck: false
+      yum:
+        name: '{{ jmeter_epel_url }}'
+        state: present
       register: install_repo
       until: install_repo is succeeded
       when: ansible_os_family == 'RedHat'

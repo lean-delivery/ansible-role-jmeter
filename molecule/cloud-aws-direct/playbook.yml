@@ -14,3 +14,8 @@
         - jpgc-tst
         - jpgc-functions
         - jpgc-dummy
+      jmeter_config_properties:
+        - name: jmeter
+          properties:
+            - key: server.rmi.ssl.disable
+              value: true
