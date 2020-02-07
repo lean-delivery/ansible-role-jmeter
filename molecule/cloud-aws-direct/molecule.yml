@@ -10,9 +10,9 @@ lint:
   options:
     config-file: .yamllint
 platforms:
-  - name: test-aws-centos8-jmeter
-    image: ami-0ed2ad9dc845b42b6
-    platform: centos8
+  - name: test-aws-redhat8-jmeter
+    image: ami-0c322300a1dd5dc79
+    platform: rhel8
     instance_type: t3.small
     region: us-east-1
     vpc_subnet_id: subnet-0f2b9cd66faea38af
