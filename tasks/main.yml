@@ -2,8 +2,10 @@
 - name: Include variables
   include_vars: '{{ distribution }}'
   with_first_found:
-    - '{{ ansible_distribution }}.yml'
-    - '{{ ansible_os_family }}.yml'
+    - files:
+        - '{{ ansible_distribution }}.yml'
+        - '{{ ansible_os_family }}.yml'
+      skip: true
   loop_control:
     loop_var: distribution
 
@@ -31,6 +33,14 @@
   until: jmeter_artifact is succeeded
 
 - block:
+    - name: Install archivers
+      package:
+        name:
+          - gtar
+          - unzip
+      register: install_packages
+      until: install_packages is succeeded
+
     - name: Make dirs for jmeter
       file:
         path: '{{ jm_path_item }}/'

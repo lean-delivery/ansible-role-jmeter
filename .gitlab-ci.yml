@@ -30,7 +30,7 @@ Lint:
   tags:
     - lint
 
-Docker jmeter:
+.Docker jmeter:
   stage: deployment test
   script:
     - molecule test -s default
