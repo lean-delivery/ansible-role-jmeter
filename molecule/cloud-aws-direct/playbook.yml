@@ -1,21 +1,25 @@
 ---
 - name: Converge
   hosts: all
-  roles:
-    - role: lean_delivery.java
-      java_distribution: openjdk
-      java_major_version: 8
-      transport: repositories
-      java_tarball_install: false
-    - role: ansible-role-jmeter
-      jmeter_plugins_install: true
-      jmeter_plugins:
-        - jpgc-casutg
-        - jpgc-tst
-        - jpgc-functions
-        - jpgc-dummy
-      jmeter_config_properties:
-        - name: jmeter
-          properties:
-            - key: server.rmi.ssl.disable
-              value: true
+  # roles:
+  #   - role: lean_delivery.java
+  #     java_distribution: openjdk
+  #     java_major_version: 8
+  #     transport: repositories
+  #     java_tarball_install: false
+  #   - role: ansible-role-jmeter
+  #     jmeter_plugins_install: true
+  #     jmeter_plugins:
+  #       - jpgc-casutg
+  #       - jpgc-tst
+  #       - jpgc-functions
+  #       - jpgc-dummy
+  #     jmeter_config_properties:
+  #       - name: jmeter
+  #         properties:
+  #           - key: server.rmi.ssl.disable
+  #             value: true
+  tasks:
+    - name: debug facts
+      debug:
+        var: ansible_facts
